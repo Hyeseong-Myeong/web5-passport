@@ -27,7 +27,7 @@ router.get('/login', function(request, response){
   `, '');
   response.send(html);
 });
-
+/*
 router.post('/login_process', function(request, response){
   var post = request.body;
   var email = post.email;
@@ -36,10 +36,10 @@ router.post('/login_process', function(request, response){
     //success!
     request.session.is_logined = true;
     request.session.nickname = authData.nickname;
-    /*
-    바로 리다이렉트를 시키니까 아무리 해도 로그인 불가. 리다이렉트 대신 send()를 사용하니 로그인 성공.
-    바로 리다이렉트를 시킬 경우, 세션 데이터를 저장하기도 전에 리다이렉트를 시켜버려서 로그인 불가능.
-    */
+    
+    //바로 리다이렉트를 시키니까 아무리 해도 로그인 불가. 리다이렉트 대신 send()를 사용하니 로그인 성공.
+    //바로 리다이렉트를 시킬 경우, 세션 데이터를 저장하기도 전에 리다이렉트를 시켜버려서 로그인 불가능.
+    
     request.session.save(function(){
       response.redirect(`/`);
     })
@@ -47,6 +47,7 @@ router.post('/login_process', function(request, response){
     response.send('Who?');
   }
 });
+*/
 
 router.get('/logout', function(request, response){
   request.session.destroy(function(err){
