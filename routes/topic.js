@@ -65,7 +65,7 @@ router.get('/update/:pageId', function(request, response){
       </form>
       `,
       `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`,
-      auth.StatusUI(requrest, response)
+      auth.StatusUI(request, response)
     );
     response.send(html);
   });
