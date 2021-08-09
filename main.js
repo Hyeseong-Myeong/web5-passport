@@ -7,7 +7,8 @@ var compression = require('compression');
 
 var helmet = require('helmet');
 var session = require('express-session');
-var FileStore = require('session-file-store')(session)
+var FileStore = require('session-file-store')(session);
+var flash = require('connect-flash');
 app.use(helmet());
 
 app.use(express.static('public'));
@@ -21,6 +22,7 @@ app.use(session({
   saveUninitialized: true,
   store: new FileStore()
 }))
+app.use(flash());
 
 var authData = {
   email:'test@test.com',
@@ -37,7 +39,6 @@ app.use(passport.session());
 passport.serializeUser(function(user, done) {
   console.log('seriallizeUser', user);
   done(null, user.email);
-  // done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
@@ -67,12 +68,23 @@ passport.use(new LocalStrategy(
    }
  }
 ));
-
+/*
 app.post('/auth/login_process', 
   passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/auth/login'
+    failureRedirect: '/auth/login',
+    failureFlash:true
   })
+);*/
+app.post('/auth/login_process',
+passport.authenticate('local', {
+  failureRedirect: '/auth/login',
+  failureFlash: false }),
+  function(req, res){
+    req.session.save(function(){
+    res.redirect('/');
+    })
+  }
 );
 
 app.get('*', function(request, response, next){

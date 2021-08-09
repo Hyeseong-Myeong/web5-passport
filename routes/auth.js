@@ -5,11 +5,7 @@ var sanitizeHtml = require('sanitize-html');
 var template = require('../lib/template.js');
 var fs = require('fs');
 
-var authData = {
-  email:'test@test.com',
-  password:'1111',
-  nickname:'hyeseong'
-}
+
 
 router.get('/login', function(request, response){
   var title = 'WEB - login';
@@ -50,6 +46,7 @@ router.post('/login_process', function(request, response){
 */
 
 router.get('/logout', function(request, response){
+  request.logout(); 
   request.session.destroy(function(err){
     response.redirect('/');
   });
