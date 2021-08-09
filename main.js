@@ -20,72 +20,11 @@ app.use(session({
   secret: 'asadlfkj!@#!@#dfgasdg',
   resave: false,
   saveUninitialized: true,
-  store: new FileStore()
+  //store: new FileStore()
 }))
 app.use(flash());
 
-var authData = {
-  email:'test@test.com',
-  password:'1111',
-  nickname:'hyeseong'
-}
-
-var passport = require('passport')
- , LocalStrategy = require('passport-local').Strategy;
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-  console.log('seriallizeUser', user);
-  done(null, user.email);
-});
-
-passport.deserializeUser(function(id, done) {
-  console.log('deserializeUser', id);
-  done(null, authData);
-});
-
-passport.use(new LocalStrategy(
-  {
-    usernameField: 'email',
-    passwordField: 'pwd'
-  },
- function(username, password, done) {
-   console.log('LocalStrategy', username, password);
-   if(username === authData.email){
-     if(password === authData.password){
-      return done(null, authData);
-     }else {
-       return done(null, false, {
-         message: 'Incorrect password.'
-       })
-     }
-   }else {
-     return done(null, false, {
-       message: 'Incorrect username.'
-     })
-   }
- }
-));
-/*
-app.post('/auth/login_process', 
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/auth/login',
-    failureFlash:true
-  })
-);*/
-app.post('/auth/login_process',
-passport.authenticate('local', {
-  failureRedirect: '/auth/login',
-  failureFlash: false }),
-  function(req, res){
-    req.session.save(function(){
-    res.redirect('/');
-    })
-  }
-);
+var passport = require('./lib/passport')(app);
 
 app.get('*', function(request, response, next){
   fs.readdir(`./data`, function(error, filelist){
@@ -96,7 +35,7 @@ app.get('*', function(request, response, next){
 
 var topicRouter = require('./routes/topic.js');
 var indexRouter = require('./routes/index.js');
-var authRouter = require('./routes/auth');
+var authRouter = require('./routes/auth')(passport);
 const auth = require('./lib/auth.js');
 
 //route, routing
